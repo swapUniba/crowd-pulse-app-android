@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">Crowd Pulse</string>
+
+    <!-- GENERAL MESSAGE -->
+    <string name="press_again_exit"> To exit press back again!</string>
+    <string name="connection_error">Connection error</string>
+    <string name="no_connection">No connection</string>
+    <string name="ok">OK</string>
+
+
+    <!-- INTRO ACTIVITY -->
+    <string name="developed_by">Developed by:</string>
+    <string name="developer_name">Swap Team</string>
+    <string name="access_setting_false">Please set on ACCESS SETTING PERMISSION for the app</string>
+    <string name="permission_not_acccept">Please accept all permissions</string>
+
+
+    <!-- LOGIN ACTIVITY -->
+    <string name="username">Username</string>
+    <string name="username_hint">Insert your username</string>
+
+    <string name="password">Password</string>
+    <string name="password_hint">Insert your password</string>
+
+    <string name="login_button">Login</string>
+
+
+    <!-- MAIN ACTIVITY -->
+    <string name="control_panel">Control panel</string>
+    <string name="share">Share</string>
+    <string name="text_switch_gps">GPS</string>
+    <string name="text_switch_contacts">Contacts</string>
+    <string name="text_switch_accounts">Account</string>
+    <string name="text_switch_calendar">Calendar</string>
+    <string name="text_switch_sms">SMS</string>
+    <string name="text_switch_app">App stats</string>
+    <string name="text_switch_netstats">Network stats</string>
+    <string name="text_switch_display">Display stats</string>
+
+    <string name="text_help_gps">GPS data is the user position in terms of latitude and logitude.</string>
+    <string name="text_help_contacts">User\'s contacts informations stored in the smartphone (with phone numbers).</string>
+    <string name="text_help_accounts">Accounts data are user\'s accounts informations (application package and user name) stored in the smartphone.</string>
+    <string name="text_help_calendar"></string>
+    <string name="text_help_sms"></string>
+    <string name="text_help_app">Information about the applications installed on the device.</string>
+    <string name="text_help_netstats">Network traffic statistics in terms of bytes transmitted and received over mobile net and Wifi. These statistics may not be available on all platforms.</string>
+    <string name="text_help_display">On/Off display total time.</string>
+
+
+
+    <string name="one_every">Every</string>
+    <string name="times_day"></string>
+    <string name="hour">hours</string>
+    <string name="minute">minutes</string>
+
+</resources>
