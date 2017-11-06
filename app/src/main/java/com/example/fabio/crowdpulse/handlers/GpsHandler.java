@@ -88,7 +88,10 @@ public class GpsHandler {
                                                     Bundle extras) {
                         }
                     });
-            location = lManager.getLastKnownLocation(provider);
+            if(lManager.getLastKnownLocation(provider)!= null){
+                location = lManager.getLastKnownLocation(provider);
+            }
+
         }
     }
 

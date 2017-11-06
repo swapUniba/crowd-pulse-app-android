@@ -124,7 +124,7 @@ public class Login extends Activity {
                                 SharedPreferences.Editor editor = preferences.edit();
                                 editor.putString(Constants.pref_displayName, data.getString(Constants.j_displayName));
                                 editor.putString(Constants.pref_username, editTextUsername.getText().toString());
-                                editor.putString(Constants.pref_password, editTextUsername.getText().toString());
+                                editor.putString(Constants.pref_password, editTextPassword.getText().toString());
                                 editor.apply();
 
                                 //IF IS THE FIRST TIME LOGGED

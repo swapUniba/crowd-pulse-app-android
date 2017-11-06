@@ -27,6 +27,7 @@
 
     <!-- MAIN ACTIVITY -->
     <string name="control_panel">Control panel</string>
+    <string name="logout_panel">Logout</string>
     <string name="share">Share</string>
     <string name="text_switch_gps">GPS</string>
     <string name="text_switch_contacts">Contacts</string>
