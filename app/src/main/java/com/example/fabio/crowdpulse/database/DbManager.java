@@ -140,10 +140,10 @@ public class DbManager
                 }
                 gps = new GPS(
                         cursor.getString(cursor.getColumnIndex(DatabaseString.gps_timestamp)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseString.gps_accuracy)),
                         cursor.getString(cursor.getColumnIndex(DatabaseString.gps_latitude)),
                         cursor.getString(cursor.getColumnIndex(DatabaseString.gps_longitude)),
                         cursor.getString(cursor.getColumnIndex(DatabaseString.gps_speed)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseString.gps_accuracy)),
                         send
                 );
 
@@ -191,10 +191,10 @@ public class DbManager
                     gps_list.add(
                             new GPS(
                                     cursor.getString(cursor.getColumnIndex(DatabaseString.gps_timestamp)),
-                                    cursor.getString(cursor.getColumnIndex(DatabaseString.gps_accuracy)),
                                     cursor.getString(cursor.getColumnIndex(DatabaseString.gps_latitude)),
                                     cursor.getString(cursor.getColumnIndex(DatabaseString.gps_longitude)),
                                     cursor.getString(cursor.getColumnIndex(DatabaseString.gps_speed)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.gps_accuracy)),
                                     send
                             )
                     );
@@ -239,10 +239,10 @@ public class DbManager
                     gpsArrayList.add(
                             new GPS(
                                     cursor.getString(cursor.getColumnIndex(DatabaseString.gps_timestamp)),
-                                    cursor.getString(cursor.getColumnIndex(DatabaseString.gps_accuracy)),
                                     cursor.getString(cursor.getColumnIndex(DatabaseString.gps_latitude)),
                                     cursor.getString(cursor.getColumnIndex(DatabaseString.gps_longitude)),
                                     cursor.getString(cursor.getColumnIndex(DatabaseString.gps_speed)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.gps_accuracy)),
                                     send
                             )
                     );
