@@ -2,6 +2,8 @@ package com.example.fabio.crowdpulse.comunication;
 
 import android.app.Application;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.example.fabio.crowdpulse.R;
 import com.example.fabio.crowdpulse.config.Constants;
@@ -122,7 +124,17 @@ public class SocketApplication extends Application {
 
                     };
 
-                    socket = IO.socket(Constants.SERVER_URL_MASTER);
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                    String server_ip = preferences.getString(Constants.pref_server_ip, "");
+
+                    if (server_ip.equalsIgnoreCase("")){
+                        socket = IO.socket(Constants.SERVER_URL_MASTER);
+                    }
+                    else {
+                        socket = IO.socket(server_ip);
+                    }
+
+
 
                     //register the function
                     socket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);

@@ -137,7 +137,7 @@ public class Intro extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(getApplicationContext(), Login.class);//Main.class);
+                Intent intent = new Intent(getApplicationContext(), SetIP.class);//Login.class);//Main.class);
                 startActivity(intent);
             }
         }, 3000);

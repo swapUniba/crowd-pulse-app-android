@@ -24,6 +24,7 @@ public class Constants {
     public static final String SERVER_URL_MASTER = "http://" + "192.168.0.58" + ":5000"; //":6542";
 
     //PREFERENCES
+    public static final String pref_server_ip = "server_ip";
     public static final String pref_displayName = "displayName";
     public static final String pref_firstLogin = "first_login";
     public static final String pref_username = "username";
@@ -153,7 +154,7 @@ public class Constants {
     //public static final String setting_share_sms = "shareSms";
     public static final String setting_share_app = "shareAppInfo";
     public static final String setting_share_netstats = "shareNetStats";
-    public static final String setting_share_display = "setting_shareDisplay";
+    public static final String setting_share_display = "shareDisplay";
 
 
     //contain all default_setting key

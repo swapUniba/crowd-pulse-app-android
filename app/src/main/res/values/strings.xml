@@ -14,6 +14,11 @@
     <string name="access_setting_false">Please set on ACCESS SETTING PERMISSION for the app</string>
     <string name="permission_not_acccept">Please accept all permissions</string>
 
+    <!-- SETIP ACTIVITY -->
+    <string name="server_ip">Server IP</string>
+    <string name="hint_server_ip">Insert server IP</string>
+    <string name="button_server_ip">Set IP</string>
+
 
     <!-- LOGIN ACTIVITY -->
     <string name="username">Username</string>

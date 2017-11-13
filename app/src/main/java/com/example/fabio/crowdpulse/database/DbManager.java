@@ -272,7 +272,7 @@ public class DbManager
 
         try
         {
-            db.delete(DatabaseString.tab_gps, DatabaseString.gps_send + "=?", new String[]{Constants.string_true});
+            db.delete(DatabaseString.tab_gps, DatabaseString.gps_send + "=? AND " + DatabaseString.gps_timestamp + " <?", new String[]{Constants.string_true, Utility.threeDaysAgoTimestamp()});
         }
         catch(SQLiteException sqle)
         {
@@ -366,7 +366,7 @@ public class DbManager
         try
         {
             db.update(DatabaseString.tab_netstats, cv,
-                    DatabaseString.netstats_networkType + "=? AND " + DatabaseString.netstats_timestamp + "=?", new String[]{netStats.networkType, netStats.timestamp});
+                    DatabaseString.netstats_networkType + "=? AND " + DatabaseString.netstats_timestamp + " =?", new String[]{netStats.networkType, netStats.timestamp});
 
         }
         catch (SQLiteException sqle)
@@ -532,7 +532,7 @@ public class DbManager
 
         try
         {
-            db.delete(DatabaseString.tab_netstats, DatabaseString.netstats_send + "=?", new String[]{Constants.string_true});
+            db.delete(DatabaseString.tab_netstats, DatabaseString.netstats_send + "=? AND " + DatabaseString.netstats_timestamp + " <? ", new String[]{Constants.string_true, Utility.threeDaysAgoTimestamp()});
         }
         catch(SQLiteException sqle)
         {
@@ -793,7 +793,7 @@ public class DbManager
 
         try
         {
-            db.delete(DatabaseString.tab_appinfo, DatabaseString.appinfo_send + "=?", new String[]{Constants.string_true});
+            db.delete(DatabaseString.tab_appinfo, DatabaseString.appinfo_send + "=? AND " + DatabaseString.appinfo_timestamp + " <? ", new String[]{Constants.string_true, Utility.threeDaysAgoTimestamp()});
         }
         catch(SQLiteException sqle)
         {
@@ -1076,7 +1076,7 @@ public class DbManager
 
         try
         {
-            db.delete(DatabaseString.tab_display, DatabaseString.display_send + "=?", new String[]{Constants.string_true});
+            db.delete(DatabaseString.tab_display, DatabaseString.display_send + "=? AND " + DatabaseString.display_timestamp + " <? ", new String[]{Constants.string_true, Utility.threeDaysAgoTimestamp()});
         }
         catch(SQLiteException sqle)
         {
@@ -1327,7 +1327,7 @@ public class DbManager
 
         try
         {
-            db.delete(DatabaseString.tab_account, DatabaseString.account_send + "=?", new String[]{Constants.string_true});
+            db.delete(DatabaseString.tab_account, DatabaseString.account_send + "=? AND " + DatabaseString.account_timestamp + " <? ", new String[]{Constants.string_true, Utility.threeDaysAgoTimestamp()});
         }
         catch(SQLiteException sqle)
         {
@@ -1594,7 +1594,7 @@ public class DbManager
 
         try
         {
-            db.delete(DatabaseString.tab_contact, DatabaseString.contact_send + "=?", new String[]{Constants.string_true});
+            db.delete(DatabaseString.tab_contact, DatabaseString.contact_send + "=? AND " + DatabaseString.contact_timestamp + " <? ", new String[]{Constants.string_true, Utility.threeDaysAgoTimestamp()});
         }
         catch(SQLiteException sqle)
         {

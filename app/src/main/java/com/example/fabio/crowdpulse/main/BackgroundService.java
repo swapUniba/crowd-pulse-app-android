@@ -92,7 +92,7 @@ public class BackgroundService extends IntentService {
         }
 
         DbManager db = new DbManager(getApplication());
-        //db.clearSendData();
+        db.clearSendData();
 
         TransfertData transfertData = new TransfertData(getApplicationContext());
         transfertData.send();
@@ -164,11 +164,11 @@ public class BackgroundService extends IntentService {
                                             break;
 
                                         case Constants.setting_read_netstats:
-                                            //if (NetStatsHandler.checkTimeBetweenRequest(getApplicationContext())){
+                                            if (NetStatsHandler.checkTimeBetweenRequest(getApplicationContext())){
                                             ArrayList<NetStats> netStatsArrayList = NetStatsHandler.readNetworkStats(getApplicationContext());
                                             NetStatsHandler.saveNetStatsArray(netStatsArrayList, getApplicationContext());
                                             NetStatsHandler.setNetxTime(getApplicationContext());
-                                            //}
+                                            }
 
                                             break;
 
@@ -214,7 +214,7 @@ public class BackgroundService extends IntentService {
 
         //Start only one thread with this name
         if(threadName == null){
-            handlergps.postDelayed(t, 0);
+            handlergps.postDelayed(t, 10000);
             threadName = t.getName();
         }
 

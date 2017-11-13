@@ -59,6 +59,22 @@ public class Utility {
     }
 
 
+    public static String threeDaysAgoTimestamp(){
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        cal.add(Calendar.DAY_OF_YEAR, -3);
+
+        long t = cal.getTimeInMillis() + cal.getTimeZone().getRawOffset();
+
+        return t + "";
+    }
+
+
     static public ArrayList<Long> splitTime(Long startTime, Long endTime, Long interval){
         ArrayList<Long> intervalTimeArrayList = new ArrayList<Long>();
 
