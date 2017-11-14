@@ -94,8 +94,30 @@ public class BackgroundService extends IntentService {
         DbManager db = new DbManager(getApplication());
         db.clearSendData();
 
-        TransfertData transfertData = new TransfertData(getApplicationContext());
-        transfertData.send();
+        if(!SocketApplication.sending){
+
+            SocketApplication.sending = true;
+
+            //SEND DATA AFTER 10 SECOND
+            final TransfertData transfertData = new TransfertData(getApplicationContext());
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    transfertData.send();
+
+                    Handler handler2 = new Handler();
+                    handler2.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            SocketApplication.sending=false;
+                        }
+                    }, 10000);
+
+                }
+            }, 10000);
+        }
+
 
         t = new Thread(
                 new Runnable() {
@@ -214,7 +236,7 @@ public class BackgroundService extends IntentService {
 
         //Start only one thread with this name
         if(threadName == null){
-            handlergps.postDelayed(t, 10000);
+            handlergps.postDelayed(t, 0);
             threadName = t.getName();
         }
 
