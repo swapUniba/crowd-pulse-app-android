@@ -31,7 +31,7 @@ public class AccountHandler {
 
         AccountManager am = AccountManager.get(context);
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+            //Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,

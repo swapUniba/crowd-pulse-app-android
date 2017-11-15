@@ -31,7 +31,8 @@ public class Intro extends Activity {
 
     private static final int REQUEST_MANAGER = 0x11;
 
-    //TODO modify the permission here and in the manifest
+    //IMPORTANT!!!!
+    //modify the permission here and in the manifest
     private static String[] PERMISSIONS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -114,20 +115,7 @@ public class Intro extends Activity {
 
 
     private void initialOperations(){
-        startBackgroundService();
         openLoginActivity();
-    }
-
-
-
-    private void startBackgroundService(){
-
-        Intent mServiceIntent = new Intent(this, BackgroundService.class);
-        //TODO riattivare
-        //mServiceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        // Starts the IntentService
-        //startService(mServiceIntent);
-
     }
 
 

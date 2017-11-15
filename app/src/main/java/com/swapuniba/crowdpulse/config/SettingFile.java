@@ -51,7 +51,7 @@ public class SettingFile {
         Boolean is_valid = false;
 
         if (Constants.setting_keys.contains(key)){
-            //TODO check value param consistence
+            //check value param consistence
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = preferences.edit();

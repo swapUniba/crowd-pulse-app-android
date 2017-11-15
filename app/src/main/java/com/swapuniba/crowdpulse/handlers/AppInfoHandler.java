@@ -38,8 +38,6 @@ public class AppInfoHandler {
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
 
-            //TODO RIATTIVARE QUANDO SI TORNA SU ANDROID AMGGIORE DI 21
-
             UsageStatsManager mUsageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
 
             /**/
@@ -53,15 +51,13 @@ public class AppInfoHandler {
 
                 appInfo.packageName = u.getPackageName();
                 appInfo.foregroundTime = u.getTotalTimeInForeground() + "";
-                appInfo.timestamp = yesterdayMidnight + ""; //TODO PAY ATTENTION!!!
+                appInfo.timestamp = yesterdayMidnight + ""; //PAY ATTENTION!!!
                 appInfo.send = false;
-                appInfo.print();
+                //appInfo.print();
 
                 appInfoArrayList.add(appInfo);
 
             }
-
-
 
         }
 
@@ -74,11 +70,11 @@ public class AppInfoHandler {
 
                 AppInfo appInfo = new AppInfo();
                 appInfo.packageName = packageInfo.packageName;
-                appInfo.timestamp = todayMidnight + ""; //TODO PAY ATTENTION!!!
+                appInfo.timestamp = todayMidnight + ""; // PAY ATTENTION!!!
                 appInfo.foregroundTime = null;
                 appInfo.send = false;
 
-                appInfo.print();
+                //appInfo.print();
 
                 appInfoArrayList.add(appInfo);
 

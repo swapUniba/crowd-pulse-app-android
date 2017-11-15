@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Constants {
 
-    //TODO TEMP STRNIG, USED AS PLACEHOLDER, DELETE IT!!!
+    //TEMP STRNIG, USED AS PLACEHOLDER, DELETE IT!!!
     public static final String temp_string_delete = "temp_string_delete";
     public static final String log_tag = "Log:";
     public static final Boolean print_log = true;
@@ -29,6 +29,7 @@ public class Constants {
     public static final String pref_firstLogin = "first_login";
     public static final String pref_username = "username";
     public static final String pref_password= "password";
+    public static final String pref_phoneNumber = "phoneNumber";
 
     //socket channels names
     public static final String channel_login = "login";
@@ -129,7 +130,7 @@ public class Constants {
 
 
     //PREFERENCES SETTING PERMISSION
-    //TODO ADD DOWN IN THE ARRAYLIST AFTER DEFINE OTHER
+    //IMPORTANT ADD DOWN IN THE ARRAYLIST AFTER DEFINE OTHER
     public static final String setting_read_gps = "readGPS";
     public static final String setting_read_contacts = "readContact";
     public static final String setting_read_accounts = "readAccounts";

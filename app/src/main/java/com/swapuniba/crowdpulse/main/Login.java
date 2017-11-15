@@ -36,6 +36,7 @@ public class Login extends Activity {
 
     EditText editTextUsername;
     EditText editTextPassword;
+    EditText editTextPhoneNumber;
 
     SharedPreferences preferences;
 
@@ -50,12 +51,14 @@ public class Login extends Activity {
         editTextUsername = (EditText) findViewById(R.id.editText_username);
         assert editTextUsername != null;
         editTextUsername.setText(preferences.getString(Constants.pref_username, ""));
-        //editTextUsername.setText("prova@prova.it");//TODO rimuovere
 
         editTextPassword = (EditText) findViewById(R.id.editText_password);
         assert editTextPassword != null;
         editTextPassword.setText(preferences.getString(Constants.pref_password, ""));
-        //editTextPassword.setText("123456");//TODO rimuovere
+
+        editTextPhoneNumber = (EditText) findViewById(R.id.editText_phoneNumber);
+        assert editTextPhoneNumber != null;
+        editTextPhoneNumber.setText(preferences.getString(Constants.pref_phoneNumber, ""));
 
         Button button_show_password = (Button) findViewById(R.id.button_show_password);
         button_show_password.setOnTouchListener(new View.OnTouchListener() {
@@ -91,7 +94,8 @@ public class Login extends Activity {
                     jsonObject.put(Constants.j_deviceinfo_sdk,deviceInfo.sdk);
                     jsonObject.put(Constants.j_deviceinfo_model,deviceInfo.model);
 
-                    deviceInfo.phoneNumbers.add("0803339989"); // TODO MODIFICARE
+                    deviceInfo.phoneNumbers.add(editTextPhoneNumber.getText().toString());
+
                     JSONArray jsonArrayPhoneNumbers = new JSONArray();
                     for (String phoneNumber : deviceInfo.phoneNumbers){
                         jsonArrayPhoneNumbers.put(phoneNumber);
@@ -123,6 +127,7 @@ public class Login extends Activity {
                                 editor.putString(Constants.pref_displayName, data.getString(Constants.j_displayName));
                                 editor.putString(Constants.pref_username, editTextUsername.getText().toString());
                                 editor.putString(Constants.pref_password, editTextPassword.getText().toString());
+                                editor.putString(Constants.pref_phoneNumber, editTextPhoneNumber.getText().toString());
                                 editor.apply();
 
                                 //IF IS THE FIRST TIME LOGGED

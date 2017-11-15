@@ -22,7 +22,8 @@ public class DisplayHandler extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        //TODO a volte quando il tread si distrugge non cattura l'evento
+
+        //USED BECAUSE SOMETIME THE THREAD GO OFF AND NOT CAPTURE THE EVENT
         if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
             // do whatever you need to do here
             Utility.printLog("screen off");
