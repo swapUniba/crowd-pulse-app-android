@@ -28,7 +28,7 @@ public class DeviceInfoHandler {
         deviceInfo.sdk = Build.VERSION.SDK_INT + "";
 
         deviceInfo.phoneNumbers = new ArrayList<String>();
-        deviceInfo.phoneNumbers.add(telemamanger.getLine1Number());
+        //deviceInfo.phoneNumbers.add(telemamanger.getLine1Number());
         //TODO GET PHONE NUMBER OR REQUIRE IT TO USER
         //deviceInfo.phoneNumbers.add("+393333333333");
         //deviceInfo.operator = telemamanger.getSimOperatorName();
