@@ -69,6 +69,21 @@ public class DatabaseString
     public static final String contact_send = "send";
 
 
+    //table Activity
+    public static final String tab_activity= "activity";
+
+    public static final String activity_timestamp = "detection_time";
+    public static final String activity_inVehicle = "inVehicle";
+    public static final String activity_onBicycle = "onBicycle";
+    public static final String activity_onFoot = "onFoot";
+    public static final String activity_running = "running";
+    public static final String activity_still = "still";
+    public static final String activity_tilting = "tilting";
+    public static final String activity_walking = "walking";
+    public static final String activity_unknown = "unknown";
+    public static final String activity_send = "send";
+
+
 
 
 

@@ -1,6 +1,7 @@
 package com.swapuniba.crowdpulse.main;
 
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -8,6 +9,9 @@ import android.os.Handler;
 import android.os.Looper;
 
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.ActivityRecognitionResult;
 import com.swapuniba.crowdpulse.business_object.Account;
 import com.swapuniba.crowdpulse.business_object.AppInfo;
 import com.swapuniba.crowdpulse.business_object.Contact;
@@ -19,6 +23,7 @@ import com.swapuniba.crowdpulse.config.Constants;
 import com.swapuniba.crowdpulse.config.SettingFile;
 import com.swapuniba.crowdpulse.database.DbManager;
 import com.swapuniba.crowdpulse.handlers.AccountHandler;
+import com.swapuniba.crowdpulse.handlers.ActivityHandler;
 import com.swapuniba.crowdpulse.handlers.AppInfoHandler;
 import com.swapuniba.crowdpulse.handlers.ContactHandler;
 import com.swapuniba.crowdpulse.handlers.GpsHandler;
@@ -42,6 +47,8 @@ public class BackgroundService extends IntentService {
     BroadcastReceiver mReceiver = new DisplayHandler();
 
     private Thread t = null;
+    private Intent i = null;
+    GoogleApiClient mApiClient;
 
     //Service time variable
     static int thread_lifetime = 0; //millisecond lifetime of the thread
@@ -68,6 +75,15 @@ public class BackgroundService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        i= intent;
+
+
+        mApiClient = new GoogleApiClient.Builder(getApplicationContext())
+                .addApi(ActivityRecognition.API)
+                .build();
+
+        mApiClient.connect();
 
         Utility.printLog("Start background service...");
 
@@ -123,6 +139,11 @@ public class BackgroundService extends IntentService {
                         try{
 
                             Utility.printLog("Background service is running...");
+
+                            if ( mApiClient.isConnected()){
+                                ActivityHandler.readActivity(i, getApplicationContext(), mApiClient);
+                            }
+
 
                             HashMap<String, String> settings = SettingFile.getSettings(getApplication());
                             for (String setting_key : Constants.setting_permission_keys){

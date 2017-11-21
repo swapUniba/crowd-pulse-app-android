@@ -45,6 +45,7 @@
     <string name="text_switch_app">App stats</string>
     <string name="text_switch_netstats">Network stats</string>
     <string name="text_switch_display">Display stats</string>
+    <string name="text_switch_activity">Activity</string>
 
     <string name="text_help_gps">GPS data is the user position in terms of latitude and logitude.</string>
     <string name="text_help_contacts">User\'s contacts informations stored in the smartphone (with phone numbers).</string>
@@ -54,6 +55,7 @@
     <string name="text_help_app">Information about the applications installed on the device.</string>
     <string name="text_help_netstats">Network traffic statistics in terms of bytes transmitted and received over mobile net and Wifi. These statistics may not be available on all platforms.</string>
     <string name="text_help_display">On/Off display total time.</string>
+    <string name="text_help_activity">Activity done by the user (es. walking, run or go in vehicle)</string>
 
 
 

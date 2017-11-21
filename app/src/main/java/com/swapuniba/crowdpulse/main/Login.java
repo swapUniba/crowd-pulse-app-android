@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.swapuniba.crowdpulse.R;
 import com.swapuniba.crowdpulse.business_object.DeviceInfo;
@@ -38,6 +39,8 @@ public class Login extends Activity {
     EditText editTextPassword;
     EditText editTextPhoneNumber;
 
+    ProgressBar progressBarLogin;
+
     SharedPreferences preferences;
 
     @Override
@@ -47,6 +50,9 @@ public class Login extends Activity {
         setContentView(R.layout.login);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        progressBarLogin = (ProgressBar) findViewById(R.id.progressLogin);
+        progressBarLogin.setVisibility(View.VISIBLE);
 
         editTextUsername = (EditText) findViewById(R.id.editText_username);
         assert editTextUsername != null;
@@ -77,7 +83,7 @@ public class Login extends Activity {
         });
 
 
-        Button login_button = (Button) findViewById(R.id.button_login);
+        final Button login_button = (Button) findViewById(R.id.button_login);
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,11 +150,17 @@ public class Login extends Activity {
                                 Intent intent = new Intent(getApplicationContext(), Main.class);
                                 startActivity(intent);
                             }
+                            else {
+                                login_button.setEnabled(true);
+                                progressBarLogin.setVisibility(View.GONE);
+                            }
 
                             Utility.printLog(data.toString());
 
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            login_button.setEnabled(true);
+                            progressBarLogin.setVisibility(View.GONE);
                         }
                     }
 
@@ -163,6 +175,11 @@ public class Login extends Activity {
 
         if (!preferences.getString(Constants.pref_password, "").equalsIgnoreCase("")){
             login_button.callOnClick();
+            login_button.setEnabled(false);
+        }
+        else{
+            progressBarLogin.setVisibility(View.GONE);
+            login_button.setEnabled(true);
         }
         
     }

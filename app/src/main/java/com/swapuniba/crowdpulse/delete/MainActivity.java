@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Image Change Broadcast Receiver.
-     * We use this Broadcast Receiver to notify the Main Activity when
+     * We use this Broadcast Receiver to notify the Main ActivityData when
      * a new notification has arrived, so it can properly change the
      * notification image
      * */

@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 
+import com.swapuniba.crowdpulse.business_object.AbstractData;
 import com.swapuniba.crowdpulse.business_object.Account;
+import com.swapuniba.crowdpulse.business_object.ActivityData;
 import com.swapuniba.crowdpulse.business_object.AppInfo;
 import com.swapuniba.crowdpulse.business_object.Contact;
 import com.swapuniba.crowdpulse.business_object.Display;
@@ -1613,6 +1615,292 @@ public class DbManager
         try
         {
             db.delete(DatabaseString.tab_contact, null, null);
+        }
+        catch(SQLiteException sqle)
+        {
+            fatto = false;
+        }
+        finally {
+            db.close();
+        }
+
+        return fatto;
+    }
+
+
+
+    // Activity
+
+    public Boolean saveActivity(ActivityData activity)
+    {
+        Boolean done = false;
+        SQLiteDatabase db=dbhelper.getWritableDatabase();
+
+
+        ContentValues cv = new ContentValues();
+        cv.put(DatabaseString.account_timestamp, activity.timestamp);
+        cv.put(DatabaseString.activity_inVehicle, activity.inVehicle);
+        cv.put(DatabaseString.activity_onBicycle, activity.onBicycle);
+        cv.put(DatabaseString.activity_onFoot, activity.onFoot);
+        cv.put(DatabaseString.activity_running, activity.running);
+        cv.put(DatabaseString.activity_still, activity.still);
+        cv.put(DatabaseString.activity_tilting, activity.tilting);
+        cv.put(DatabaseString.activity_walking, activity.walking);
+        cv.put(DatabaseString.activity_unknown, activity.unknown);
+
+        if(activity.send){
+            cv.put(DatabaseString.activity_send, Constants.string_true);
+        }
+        else {
+            cv.put(DatabaseString.activity_send, Constants.string_false);
+        }
+
+        try
+        {
+            db.insert(DatabaseString.tab_activity, null, cv);
+
+            done = true;
+        }
+        catch (Exception e)
+        {
+            Log.i("Test:", "Eccezione Db saveActivity");
+            done = false;
+        }
+        finally {
+            db.close();
+        }
+
+        return done;
+    }
+
+
+    public Boolean updateActivity(ActivityData activity)
+    {
+        Boolean done = false;
+        SQLiteDatabase db=dbhelper.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(DatabaseString.account_timestamp, activity.timestamp);
+        cv.put(DatabaseString.activity_inVehicle, activity.inVehicle);
+        cv.put(DatabaseString.activity_onBicycle, activity.onBicycle);
+        cv.put(DatabaseString.activity_onFoot, activity.onFoot);
+        cv.put(DatabaseString.activity_running, activity.running);
+        cv.put(DatabaseString.activity_still, activity.still);
+        cv.put(DatabaseString.activity_tilting, activity.tilting);
+        cv.put(DatabaseString.activity_walking, activity.walking);
+        cv.put(DatabaseString.activity_unknown, activity.unknown);
+
+        if(activity.send){
+            cv.put(DatabaseString.activity_send, Constants.string_true);
+        }
+        else {
+            cv.put(DatabaseString.activity_send, Constants.string_false);
+        }
+
+        try
+        {
+            db.update(DatabaseString.tab_activity, cv,
+                    DatabaseString.activity_timestamp + "=?",
+                    new String[]{activity.timestamp});
+
+            done = true;
+        }
+        catch (SQLiteException sqle)
+        {
+            Log.i("Test:", "Eccezione Db updateActivity");
+            done = false;
+        }
+        finally {
+            db.close();
+        }
+        return done;
+    }
+
+
+    public ActivityData getActivity(String timestamp){
+
+        ActivityData activity;
+        Cursor cursor;
+
+        SQLiteDatabase db=dbhelper.getReadableDatabase();
+
+        try
+        {
+
+            cursor = db.query(DatabaseString.tab_activity, null,
+                    DatabaseString.activity_timestamp + "=?",
+                    new String[]{timestamp}, null, null, null, null);
+
+            if (cursor .moveToFirst()) {
+
+                Boolean send = false;
+                if(cursor.getString(cursor.getColumnIndex(DatabaseString.activity_send)).equalsIgnoreCase(Constants.string_true)){
+                    send = true;
+                }
+                activity = new ActivityData(
+                        cursor.getString(cursor.getColumnIndex(DatabaseString.activity_timestamp)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseString.activity_inVehicle)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseString.activity_onBicycle)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseString.activity_onFoot)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseString.activity_running)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseString.activity_still)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseString.activity_tilting)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseString.activity_walking)),
+                        cursor.getString(cursor.getColumnIndex(DatabaseString.activity_unknown)),
+                        send
+                );
+
+            }
+            else{
+                activity = null;
+            }
+
+        }
+        catch(SQLiteException sqle)
+        {
+            activity = null;
+            Log.i("Test:", "Eccezione Db getActivity");
+        }
+        finally {
+            db.close();
+        }
+
+        return activity;
+    }
+
+
+    public ArrayList<ActivityData> getAllActivity(){
+
+        ArrayList<ActivityData> activityArrayList  = new ArrayList<ActivityData>();
+
+        Cursor cursor;
+
+        SQLiteDatabase db=dbhelper.getReadableDatabase();
+
+        try
+        {
+
+            cursor = db.query(DatabaseString.tab_activity, null, null, null, null, null, null, null);
+
+            if (cursor .moveToFirst()) {
+
+                while (cursor.isAfterLast() == false) {
+
+                    Boolean send = false;
+                    if(cursor.getString(cursor.getColumnIndex(DatabaseString.activity_send)).equalsIgnoreCase(Constants.string_true)){
+                        send = true;
+                    }
+                    activityArrayList.add(
+                            new ActivityData(
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_timestamp)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_inVehicle)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_onBicycle)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_onFoot)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_running)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_still)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_tilting)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_walking)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_unknown)),
+                                    send
+                            )
+                    );
+
+                    cursor.moveToNext();
+                }
+            }
+
+        }
+        catch(SQLiteException sqle)
+        {
+            Log.i("Test:", "Eccezione Db getAllActivity");
+            activityArrayList = null;
+        }
+        finally {
+            db.close();
+        }
+        return activityArrayList;
+    }
+
+    public ArrayList<ActivityData> getNotSendActivity(){
+
+        ArrayList<ActivityData> activityArrayList  = new ArrayList<ActivityData>();
+
+        Cursor cursor;
+
+        SQLiteDatabase db=dbhelper.getReadableDatabase();
+
+        try
+        {
+
+            cursor = db.query(DatabaseString.tab_activity, null, DatabaseString.activity_send+ "=?", new String[]{Constants.string_false}, null, null, null, null);
+
+            if (cursor .moveToFirst()) {
+
+                while (cursor.isAfterLast() == false) {
+
+                    Boolean send = false;
+                    if(cursor.getString(cursor.getColumnIndex(DatabaseString.activity_send)).equalsIgnoreCase(Constants.string_true)){
+                        send = true;
+                    }
+                    activityArrayList.add(
+                            new ActivityData(
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_timestamp)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_inVehicle)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_onBicycle)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_onFoot)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_running)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_still)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_tilting)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_walking)),
+                                    cursor.getString(cursor.getColumnIndex(DatabaseString.activity_unknown)),
+                                    send
+                            )
+                    );
+
+                    cursor.moveToNext();
+                }
+            }
+
+        }
+        catch(SQLiteException sqle)
+        {
+            Log.i("Test:", "Eccezione Db getNotSendActivity");
+            activityArrayList = null;
+        }
+        finally {
+            db.close();
+        }
+        return activityArrayList;
+    }
+
+
+    public boolean deleteCActivitySend(){
+
+        SQLiteDatabase db=dbhelper.getReadableDatabase();
+
+        boolean fatto = true;
+
+        try
+        {
+            db.delete(DatabaseString.tab_activity, DatabaseString.account_send + "=? AND " + DatabaseString.activity_timestamp + " <? ", new String[]{Constants.string_true, Utility.threeDaysAgoTimestamp()});
+        }
+        catch(SQLiteException sqle)
+        {
+            fatto = false;
+        }
+        finally {
+            db.close();
+        }
+        return fatto;
+    }
+
+
+    public boolean deleteAllActivity(){
+        SQLiteDatabase db=dbhelper.getReadableDatabase();
+        boolean fatto = true;
+        try
+        {
+            db.delete(DatabaseString.tab_activity, null, null);
         }
         catch(SQLiteException sqle)
         {

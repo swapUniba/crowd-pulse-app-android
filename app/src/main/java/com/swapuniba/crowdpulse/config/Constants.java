@@ -104,6 +104,16 @@ public class Constants {
     public static final String j_netstats_rxBytes = "rxBytes";
     public static final String j_netstats_txBytes = "txBytes";
 
+    public static final String j_type_activity = "activity";
+    public static final String j_activity_timestamp= "timestamp";
+    public static final String j_activity_inVehicle = "inVehicle";
+    public static final String j_activity_onBicycle = "onBicycle";
+    public static final String j_activity_onFoot = "onFoot";
+    public static final String j_activity_running = "running";
+    public static final String j_activity_still = "still";
+    public static final String j_activity_tilting = "tilting";
+    public static final String j_activity_walking = "walking";
+    public static final String j_activity_unknown = "unknown";
 
 
     // RECORDING AND WRITING CODE
@@ -139,7 +149,9 @@ public class Constants {
     public static final String setting_read_app = "readAppInfo";
     public static final String setting_read_netstats = "readNetStats";
     public static final String setting_read_display = "readDisplay";
-    //time key
+    public static final String setting_read_activity = "readActivity";
+
+    //TIME KEY
     public static final String setting_time_read_gps = "timeReadGPS";
     public static final String setting_time_read_contacts = "timeReadContact";
     public static final String setting_time_read_accounts = "timeReadAccounts";
@@ -147,6 +159,8 @@ public class Constants {
     //public static final String setting_time_read_sms = "timeReadSms";
     public static final String setting_time_read_app = "timeReadAppInfo";
     public static final String setting_time_read_netstats = "timeReadNetStats";
+    public static final String setting_time_read_activity = "timeReadActivity";
+
     //share
     public static final String setting_share_gps = "shareGPS";
     public static final String setting_share_contacts = "shareContact";
@@ -156,6 +170,7 @@ public class Constants {
     public static final String setting_share_app = "shareAppInfo";
     public static final String setting_share_netstats = "shareNetStats";
     public static final String setting_share_display = "shareDisplay";
+    public static final String setting_share_activity = "shareActivity";
 
 
     //contain all default_setting key
@@ -169,6 +184,7 @@ public class Constants {
                 add(setting_read_app);
                 add(setting_read_netstats);
                 add(setting_read_display);
+                add(setting_read_activity);
                 add(setting_time_read_gps);
                 add(setting_time_read_contacts);
                 add(setting_time_read_accounts);
@@ -176,6 +192,7 @@ public class Constants {
                 //add(setting_time_read_sms);
                 add(setting_time_read_app);
                 add(setting_time_read_netstats);
+                add(setting_time_read_activity);
                 add(setting_share_gps);
                 add(setting_share_contacts);
                 add(setting_share_accounts);
@@ -184,6 +201,7 @@ public class Constants {
                 add(setting_share_app);
                 add(setting_share_netstats);
                 add(setting_share_display);
+                add(setting_share_activity);
             }};
 
     //contain only key used for the permission
@@ -197,6 +215,7 @@ public class Constants {
                 add(setting_read_app);
                 add(setting_read_netstats);
                 add(setting_read_display);
+                add(setting_read_activity);
             }};
 
     //contain only key used for set the time of the reading
@@ -209,6 +228,7 @@ public class Constants {
                 //add(setting_time_read_sms);
                 add(setting_time_read_app);
                 add(setting_time_read_netstats);
+                add(setting_time_read_activity);
             }};
 
     //contain only key used for set the share of the data
@@ -222,6 +242,7 @@ public class Constants {
                 add(setting_share_app);
                 add(setting_share_netstats);
                 add(setting_share_display);
+                add(setting_share_activity);
             }};
 
 
@@ -234,6 +255,7 @@ public class Constants {
         put(setting_read_app, no_record);
         put(setting_read_netstats, no_record);
         put(setting_read_display, no_record);
+        put(setting_read_activity, no_record);
         put(setting_time_read_gps, "120000");
         put(setting_time_read_contacts, "3600000");
         put(setting_time_read_accounts, "3600000");
@@ -241,6 +263,7 @@ public class Constants {
         //put(setting_time_read_sms, "3600000");
         put(setting_time_read_app, "86400000");
         put(setting_time_read_netstats, "3600000");
+        put(setting_time_read_activity, "120000");
         put(setting_share_gps, string_false);
         put(setting_share_contacts, string_false);
         put(setting_share_accounts, string_false);
@@ -249,6 +272,7 @@ public class Constants {
         put(setting_share_app, string_false);
         put(setting_share_netstats, string_false);
         put(setting_share_display, string_false);
+        put(setting_share_activity, string_false);
     }};
 
 
@@ -262,6 +286,7 @@ public class Constants {
         put(setting_read_app, setting_time_read_app);
         put(setting_read_netstats, setting_time_read_netstats);
         put(setting_read_display, "");
+        put(setting_read_activity, setting_time_read_activity);
     }};
 
     //mapping between interval setting key and time read
@@ -274,6 +299,7 @@ public class Constants {
         put(setting_read_app, setting_share_app);
         put(setting_read_netstats, setting_share_netstats);
         put(setting_read_display, setting_share_display);
+        put(setting_read_activity, setting_share_activity);
     }};
 
     //mapping between setting key and time for take data
@@ -326,6 +352,20 @@ public class Constants {
                                                         add(24);
                                                     }});
         put(setting_read_display, new ArrayList<Integer>(){{}});
+        put(setting_read_activity, new ArrayList<Integer>(){{
+            add(1);
+            add(2);
+            add(3);
+            add(4);
+            add(5);
+            add(6);
+            add(10);
+            add(12);
+            add(15);
+            add(20);
+            add(30);
+            add(60);
+        }});
     }};
 
     //mapping between setting key and time type
@@ -338,6 +378,7 @@ public class Constants {
         put(setting_read_app, type_hour);
         put(setting_read_netstats, type_hour);
         put(setting_read_display, type_minute);
+        put(setting_read_activity, type_minute);
     }};
 
 
@@ -350,6 +391,7 @@ public class Constants {
     public static final String last_app_send = "last_app_send";
     public static final String last_netstats_send = "last_netstats_send";
     public static final String last_display_send = "last_display_send";
+    public static final String last_activity_send = "last_activity_send";
 
 
     public static final String type_minute = "minute";
@@ -421,6 +463,23 @@ public class Constants {
         ));
         add(new SettingItem(Constants.setting_read_display,
                 new ArrayList<Integer>(){{
+                }},
+                type_minute
+        ));
+        add(new SettingItem(Constants.setting_read_activity,
+                new ArrayList<Integer>(){{
+                    add(1);
+                    add(2);
+                    add(3);
+                    add(4);
+                    add(5);
+                    add(6);
+                    add(10);
+                    add(12);
+                    add(15);
+                    add(20);
+                    add(30);
+                    add(60);
                 }},
                 type_minute
         ));

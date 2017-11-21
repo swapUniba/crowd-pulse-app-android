@@ -20,9 +20,6 @@ import java.util.HashMap;
 
 public class Intro extends Activity {
 
-    Handler mHandler = new Handler();
-    Runnable mUpdateTimeTask;
-
     static boolean check_ACCESS_SETTINGS = false;
     static boolean first = true;
 
@@ -142,8 +139,6 @@ public class Intro extends Activity {
     }
 
 
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -174,11 +169,6 @@ public class Intro extends Activity {
 
         onCreate(getIntent().getExtras());
 
-        //Intent mServiceIntent = new Intent(getApplicationContext(), Intro.class);
-        //mServiceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        // Starts the IntentService
-        //startService(mServiceIntent);
     }
 
 

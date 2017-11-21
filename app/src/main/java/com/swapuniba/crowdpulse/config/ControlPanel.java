@@ -60,6 +60,10 @@ public class ControlPanel extends Activity {
                 R.id.switchShareDisplay, null, null,
                 null, null, null);
 
+        dispalySetting(Constants.setting_read_activity, R.id.switchSettingActivity, R.id.imageHelpActivity, R.string.text_help_activity,
+                R.id.switchShareActivity, R.id.seekBarSettingActivity, R.id.textSeekbarCurrentActivity,
+                R.id.textSeekbarIntervalTypeActivity, R.id.textSeekbarStartActivity, R.id.textSeekbarEndActivity);
+
     }
     
     

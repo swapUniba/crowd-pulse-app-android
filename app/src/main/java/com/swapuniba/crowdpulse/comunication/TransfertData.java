@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.swapuniba.crowdpulse.business_object.AbstractData;
 import com.swapuniba.crowdpulse.business_object.Account;
+import com.swapuniba.crowdpulse.business_object.ActivityData;
 import com.swapuniba.crowdpulse.business_object.AppInfo;
 import com.swapuniba.crowdpulse.business_object.Contact;
 import com.swapuniba.crowdpulse.business_object.Display;
@@ -13,6 +14,7 @@ import com.swapuniba.crowdpulse.business_object.GPS;
 import com.swapuniba.crowdpulse.business_object.NetStats;
 import com.swapuniba.crowdpulse.config.Constants;
 import com.swapuniba.crowdpulse.handlers.AccountHandler;
+import com.swapuniba.crowdpulse.handlers.ActivityHandler;
 import com.swapuniba.crowdpulse.handlers.AppInfoHandler;
 import com.swapuniba.crowdpulse.handlers.ContactHandler;
 import com.swapuniba.crowdpulse.handlers.DeviceInfoHandler;
@@ -168,6 +170,15 @@ public class TransfertData {
 
                         break;
 
+                    case Constants.j_type_activity:
+                        ActivityData activity = new ActivityData();
+                        activity.fromJSON(jsonObject);
+                        activity.send = true;
+
+                        ActivityHandler.saveActivity(activity, context);
+
+                        break;
+
 
                     default:
                         break;
@@ -200,6 +211,9 @@ public class TransfertData {
         addList(a);
         //NETSTATS
         a = NetStatsHandler.getNotSendNetStats(context);
+        addList(a);
+        //ACTIVITY
+        a = ActivityHandler.getNotSendActivity(context);
         addList(a);
 
     }

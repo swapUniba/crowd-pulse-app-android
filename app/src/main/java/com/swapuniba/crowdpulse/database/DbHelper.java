@@ -76,6 +76,21 @@ public class DbHelper extends SQLiteOpenHelper
         db.execSQL(q5);
 
 
+        String q6="CREATE TABLE "+ DatabaseString.tab_activity+ " (" +
+                DatabaseString.activity_timestamp + " TEXT," +
+                DatabaseString.activity_inVehicle + " TEXT," +
+                DatabaseString.activity_onBicycle + " TEXT," +
+                DatabaseString.activity_onFoot + " TEXT," +
+                DatabaseString.activity_running + " TEXT," +
+                DatabaseString.activity_still + " TEXT," +
+                DatabaseString.activity_tilting + " TEXT," +
+                DatabaseString.activity_walking + " TEXT," +
+                DatabaseString.activity_unknown + " TEXT," +
+                DatabaseString.activity_send + " TEXT, " +
+                "PRIMARY KEY(" + DatabaseString.activity_timestamp + "))";
+        db.execSQL(q6);
+
+
     }
 
     @Override
