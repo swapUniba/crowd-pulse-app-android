@@ -13,6 +13,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.swapuniba.crowdpulse.business_object.Account;
+import com.swapuniba.crowdpulse.business_object.ActivityData;
 import com.swapuniba.crowdpulse.business_object.AppInfo;
 import com.swapuniba.crowdpulse.business_object.Contact;
 import com.swapuniba.crowdpulse.business_object.GPS;
@@ -140,10 +141,6 @@ public class BackgroundService extends IntentService {
 
                             Utility.printLog("Background service is running...");
 
-                            if ( mApiClient.isConnected()){
-                                ActivityHandler.readActivity(i, getApplicationContext(), mApiClient);
-                            }
-
 
                             HashMap<String, String> settings = SettingFile.getSettings(getApplication());
                             for (String setting_key : Constants.setting_permission_keys){
@@ -209,6 +206,17 @@ public class BackgroundService extends IntentService {
                                             }
 
                                             break;
+
+                                        case Constants.setting_read_activity:
+
+                                            System.out.println("Activity: " + "unooo");
+
+                                            if ( mApiClient.isConnected() && ActivityHandler.checkTimeBetweenRequest(getApplicationContext())){
+                                                System.out.println("Activity: " + "dueeee");
+                                                ActivityData activityData = ActivityHandler.readActivity(i, getApplicationContext(), mApiClient);
+                                                ActivityHandler.saveActivity(activityData, getApplicationContext());
+                                                ActivityHandler.setNetxTime(getApplicationContext());
+                                            }
 
                                         default:
 

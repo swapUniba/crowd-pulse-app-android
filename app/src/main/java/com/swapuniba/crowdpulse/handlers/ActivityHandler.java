@@ -34,7 +34,7 @@ public class ActivityHandler {
     public static ActivityData readActivity(Intent intent, Context context, GoogleApiClient mApiClient) {
         ActivityData activityData = null;
         PendingIntent pendingIntent = PendingIntent.getService( context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT );
-        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates( mApiClient, 0, pendingIntent );
+        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates( mApiClient, 3000, pendingIntent );
 
         if(ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
@@ -96,6 +96,8 @@ public class ActivityHandler {
         }
 
         activityData.send = false;
+
+        //activityData.print();
 
         return activityData;
 
