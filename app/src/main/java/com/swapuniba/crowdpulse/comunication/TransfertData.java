@@ -52,7 +52,7 @@ public class TransfertData {
             jsonObject.put(Constants.j_deviceinfo_deviceId, DeviceInfoHandler.readDeviceInfo(context).deviceId);
             jsonObject.put(Constants.j_dataIdentifier, dataIdentifier);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            jsonObject.put(Constants.j_displayName, preferences.getString(Constants.pref_displayName, ""));
+            jsonObject.put(Constants.j_username, preferences.getString(Constants.pref_username, ""));
             jsonObject.put(Constants.j_data, new JSONArray());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -222,7 +222,7 @@ public class TransfertData {
 
         Boolean send = true;
         try {
-            if(jsonObject.getString(Constants.j_displayName).equalsIgnoreCase("")){
+            if(jsonObject.getString(Constants.j_username).equalsIgnoreCase("")){
                 send = false;
             }
         } catch (JSONException e) {

@@ -56,7 +56,7 @@ public class Login extends Activity {
 
         editTextUsername = (EditText) findViewById(R.id.editText_username);
         assert editTextUsername != null;
-        editTextUsername.setText(preferences.getString(Constants.pref_username, ""));
+        editTextUsername.setText(preferences.getString(Constants.pref_email, ""));
 
         editTextPassword = (EditText) findViewById(R.id.editText_password);
         assert editTextPassword != null;
@@ -130,8 +130,8 @@ public class Login extends Activity {
                             if(data.getInt(Constants.j_code) == Constants.response_success){
 
                                 SharedPreferences.Editor editor = preferences.edit();
-                                editor.putString(Constants.pref_displayName, data.getString(Constants.j_displayName));
-                                editor.putString(Constants.pref_username, editTextUsername.getText().toString());
+                                editor.putString(Constants.pref_username, data.getString(Constants.j_username));
+                                editor.putString(Constants.pref_email, editTextUsername.getText().toString());
                                 editor.putString(Constants.pref_password, editTextPassword.getText().toString());
                                 editor.putString(Constants.pref_phoneNumber, editTextPhoneNumber.getText().toString());
                                 editor.apply();

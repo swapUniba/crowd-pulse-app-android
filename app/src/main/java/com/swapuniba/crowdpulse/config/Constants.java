@@ -25,9 +25,9 @@ public class Constants {
 
     //PREFERENCES
     public static final String pref_server_ip = "server_ip";
-    public static final String pref_displayName = "displayName";
-    public static final String pref_firstLogin = "first_login";
     public static final String pref_username = "username";
+    public static final String pref_firstLogin = "first_login";
+    public static final String pref_email = "email";
     public static final String pref_password= "password";
     public static final String pref_phoneNumber = "phoneNumber";
 
@@ -58,7 +58,7 @@ public class Constants {
     public static final String j_dataIdentifier = "dataIdentifier";
     public static final String j_email = "email";
     public static final String j_password = "password";
-    public static final String j_displayName = "displayName";
+    public static final String j_username = "username";
 
     public static final String j_type_deviceinfo = "deviceinfo";
     public static final String j_deviceinfo_deviceId = "deviceId";

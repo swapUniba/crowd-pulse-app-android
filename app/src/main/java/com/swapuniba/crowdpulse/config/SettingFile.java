@@ -108,7 +108,7 @@ public class SettingFile {
                 }
             jsonObject.put(Constants.j_deviceinfo_deviceId, DeviceInfoHandler.readDeviceInfo(context).deviceId);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            jsonObject.put(Constants.j_displayName, preferences.getString(Constants.pref_displayName, ""));
+            jsonObject.put(Constants.j_username, preferences.getString(Constants.pref_username, ""));
 
             } catch (JSONException e) {
             e.printStackTrace();
