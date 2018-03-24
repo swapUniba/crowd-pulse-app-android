@@ -21,7 +21,7 @@ public class Constants {
     public static final int sourceWebUI = 1;
 
     //URL SERVER
-    public static final String SERVER_URL_MASTER = "http://" + "192.168.0.58" + ":5000"; //":6542";
+    public static final String SERVER_URL_MASTER = "http://" + "193.204.187.192" + ":5555"; //":6542";
 
     //PREFERENCES
     public static final String pref_server_ip = "server_ip";

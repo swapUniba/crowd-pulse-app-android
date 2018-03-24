@@ -125,7 +125,7 @@ public class Login extends Activity {
 
                             final Context context = getApplicationContext();
 
-                            NotificationUtility.showToastSocket(context, data.getString(Constants.j_description));
+                            // NotificationUtility.showToastSocket(context, data.getString(Constants.j_description));
 
                             if(data.getInt(Constants.j_code) == Constants.response_success){
 

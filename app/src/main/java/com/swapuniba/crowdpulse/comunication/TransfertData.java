@@ -244,7 +244,7 @@ public class TransfertData {
                         JSONObject data = (JSONObject) args[0];
                         if(data.getInt(Constants.j_code) == Constants.response_success){
                             if (data.getString(Constants.j_dataIdentifier).equalsIgnoreCase(dataIdentifier)){
-                                NotificationUtility.showToastSocket(context, "Data recived");
+                                // NotificationUtility.showToastSocket(context, "Data received");
                                 setSent();
                             }
                         }

@@ -1,21 +1,30 @@
 package com.swapuniba.crowdpulse.main;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.ActivityRecognitionResult;
+import com.swapuniba.crowdpulse.R;
 import com.swapuniba.crowdpulse.business_object.Account;
 import com.swapuniba.crowdpulse.business_object.ActivityData;
 import com.swapuniba.crowdpulse.business_object.AppInfo;
 import com.swapuniba.crowdpulse.business_object.Contact;
+import com.swapuniba.crowdpulse.business_object.DeviceInfo;
 import com.swapuniba.crowdpulse.business_object.GPS;
 import com.swapuniba.crowdpulse.business_object.NetStats;
 import com.swapuniba.crowdpulse.comunication.SocketApplication;
@@ -27,13 +36,21 @@ import com.swapuniba.crowdpulse.handlers.AccountHandler;
 import com.swapuniba.crowdpulse.handlers.ActivityHandler;
 import com.swapuniba.crowdpulse.handlers.AppInfoHandler;
 import com.swapuniba.crowdpulse.handlers.ContactHandler;
+import com.swapuniba.crowdpulse.handlers.DeviceInfoHandler;
 import com.swapuniba.crowdpulse.handlers.GpsHandler;
 import com.swapuniba.crowdpulse.handlers.DisplayHandler;
 import com.swapuniba.crowdpulse.handlers.NetStatsHandler;
+import com.swapuniba.crowdpulse.utility.NotificationUtility;
 import com.swapuniba.crowdpulse.utility.Utility;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import io.socket.client.Socket;
 
 
 /**
@@ -41,253 +58,271 @@ import java.util.HashMap;
  */
 public class BackgroundService extends IntentService {
 
-    static String threadName = null;
-    private Handler handlergps = new Handler(Looper.getMainLooper());
+  static String threadName = null;
+  private Handler handlergps = new Handler(Looper.getMainLooper());
 
-    static IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-    BroadcastReceiver mReceiver = new DisplayHandler();
+  static IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+  BroadcastReceiver mReceiver = new DisplayHandler();
 
-    private Thread t = null;
-    private Intent i = null;
-    GoogleApiClient mApiClient;
+  private Thread t = null;
+  private Intent i = null;
+  GoogleApiClient mApiClient;
 
-    //Service time variable
-    static int thread_lifetime = 0; //millisecond lifetime of the thread
-    static int background_service_repeat_time = Constants.background_service_repeat_time;
-    static int background_service_restart_time = Constants.background_service_restart_time;
+  //Service time variable
+  static int thread_lifetime = 0; //millisecond lifetime of the thread
+  static int background_service_repeat_time = Constants.background_service_repeat_time;
+  static int background_service_restart_time = Constants.background_service_restart_time;
 
 
-    public BackgroundService(String name) {
-        super(name);
+  public BackgroundService(String name) {
+    super(name);
+  }
+
+  public BackgroundService() {
+    //service name
+    super("Crowdpulse_BackgroundService");
+  }
+
+  //override by onStartCommand!!!!!!
+  @Override
+  protected void onHandleIntent(Intent workIntent) {
+    // Gets data from the incoming Intent
+    String dataString = workIntent.getDataString();
+  }
+
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
+
+    Socket socket = SocketApplication.getSocket();
+    if (!socket.connected()) {
+      socket.connect();
+
+      // socket login (TODO with access-token based authentication this login can be removed)
+      JSONObject jsonObject = new JSONObject();
+      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+      try {
+        jsonObject.put(Constants.j_email, preferences.getString(Constants.pref_email, ""));
+        jsonObject.put(Constants.j_password,  preferences.getString(Constants.pref_password, ""));
+        DeviceInfo deviceInfo = DeviceInfoHandler.readDeviceInfo(getApplicationContext());
+        jsonObject.put(Constants.j_deviceinfo_deviceId,deviceInfo.deviceId);
+        jsonObject.put(Constants.j_deviceinfo_brand,deviceInfo.brand);
+        jsonObject.put(Constants.j_deviceinfo_sdk,deviceInfo.sdk);
+        jsonObject.put(Constants.j_deviceinfo_model,deviceInfo.model);
+        deviceInfo.phoneNumbers.add( preferences.getString(Constants.pref_phoneNumber, ""));
+
+        JSONArray jsonArrayPhoneNumbers = new JSONArray();
+        for (String phoneNumber : deviceInfo.phoneNumbers){
+          jsonArrayPhoneNumbers.put(phoneNumber);
+        }
+        jsonObject.put(Constants.j_deviceinfo_phoneNumbers, jsonArrayPhoneNumbers);
+        socket.emit(Constants.channel_login, jsonObject);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
     }
 
-    public BackgroundService() {
-        //service name
-        super("Crowdpulse_BackgroundService");
+
+    i= intent;
+    mApiClient = new GoogleApiClient.Builder(getApplicationContext())
+        .addApi(ActivityRecognition.API)
+        .build();
+
+    mApiClient.connect();
+    Utility.printLog("Start background service...");
+
+    //create a listener for screen on/off
+    if (SettingFile.getSettings(getApplication()).get(Constants.setting_read_display).
+        equalsIgnoreCase(Constants.record)){
+      filter.addAction(Intent.ACTION_SCREEN_OFF);
+      registerReceiver(mReceiver, filter);
+    }else {
+      try {
+        unregisterReceiver(mReceiver);
+      }
+      catch (Exception e){
+        e.printStackTrace();
+      }
 
     }
 
-    //override by onStartCommand!!!!!!
-    @Override
-    protected void onHandleIntent(Intent workIntent) {
-        // Gets data from the incoming Intent
-        String dataString = workIntent.getDataString();
+    DbManager db = new DbManager(getApplication());
+    db.clearSendData();
+
+    if(!SocketApplication.sending){
+
+      SocketApplication.sending = true;
+
+      //SEND DATA AFTER 10 SECOND
+      final TransfertData transfertData = new TransfertData(getApplicationContext());
+      Handler handler = new Handler();
+      handler.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          transfertData.send();
+
+          Handler handler2 = new Handler();
+          handler2.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+              SocketApplication.sending=false;
+            }
+          }, 10000);
+
+        }
+      }, 10000);
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
 
-        i= intent;
+    t = new Thread(
+        new Runnable() {
+
+          @Override
+          public void run() {
+
+            try{
+
+              Utility.printLog("Background service is running...");
 
 
-        mApiClient = new GoogleApiClient.Builder(getApplicationContext())
-                .addApi(ActivityRecognition.API)
-                .build();
+              HashMap<String, String> settings = SettingFile.getSettings(getApplication());
+              for (String setting_key : Constants.setting_permission_keys){
+                //Utility.printLog(setting_key + "is set: " + settings.get(setting_key));
+                //execute only enabled service
+                if (settings.get(setting_key).equalsIgnoreCase(Constants.record)){
 
-        mApiClient.connect();
+                  switch (setting_key){
+                    case Constants.setting_read_gps:
 
-        Utility.printLog("Start background service...");
+                      if (GpsHandler.checkTimeBetweenRequest(getApplicationContext())){
+                        GPS gps = GpsHandler.readGPS(getApplication());
+                        if(gps != null){
+                          GpsHandler.saveGPS(gps, getApplicationContext());
+                          GpsHandler.setNetxTime(getApplicationContext());
+                        }
+                        else{
+                          Utility.printLog("Error to get GPS");
+                        }
+                      }
 
-        //create a listener for screen on/off
-        if (SettingFile.getSettings(getApplication()).get(Constants.setting_read_display).
-                                                                equalsIgnoreCase(Constants.record)){
-            filter.addAction(Intent.ACTION_SCREEN_OFF);
-            registerReceiver(mReceiver, filter);
-        }else {
-            try {
-                unregisterReceiver(mReceiver);
+                      break;
+
+                    case Constants.setting_read_contacts:
+                      if (ContactHandler.checkTimeBetweenRequest(getApplicationContext())){
+                        ArrayList<Contact> contactArrayList = ContactHandler.readContact(getApplicationContext());
+                        ContactHandler.saveContactArray(contactArrayList, getApplicationContext());
+                        ContactHandler.setNetxTime(getApplicationContext());
+                      }
+
+                      break;
+
+                    case Constants.setting_read_accounts:
+                      if (AccountHandler.checkTimeBetweenRequest(getApplicationContext())){
+                        ArrayList<Account> accountArrayList = AccountHandler.readAccounts(getApplicationContext());
+                        AccountHandler.saveAccountArray(accountArrayList, getApplicationContext());
+                        AccountHandler.setNetxTime(getApplicationContext());
+                      }
+                      break;
+                    /*
+                    case Constants.setting_read_calendar:
+
+                        break;
+
+                    case Constants.setting_read_sms:
+
+                        break;
+                     */
+                    case Constants.setting_read_app:
+                      if (AppInfoHandler.checkTimeBetweenRequest(getApplicationContext())){
+                        ArrayList<AppInfo> appInfoArrayList = AppInfoHandler.readAppInfo(getApplicationContext());
+                        AppInfoHandler.saveAppInfoArray(appInfoArrayList, getApplicationContext());
+                        AppInfoHandler.setNetxTime(getApplicationContext());
+                      }
+
+                      break;
+
+                    case Constants.setting_read_netstats:
+                      if (NetStatsHandler.checkTimeBetweenRequest(getApplicationContext())){
+                        ArrayList<NetStats> netStatsArrayList = NetStatsHandler.readNetworkStats(getApplicationContext());
+                        NetStatsHandler.saveNetStatsArray(netStatsArrayList, getApplicationContext());
+                        NetStatsHandler.setNetxTime(getApplicationContext());
+                      }
+
+                      break;
+
+                    case Constants.setting_read_activity:
+                      if ( mApiClient.isConnected() && ActivityHandler.checkTimeBetweenRequest(getApplicationContext())){
+                        ActivityData activityData = ActivityHandler.readActivity(i, getApplicationContext(), mApiClient);
+                        ActivityHandler.saveActivity(activityData, getApplicationContext());
+                        ActivityHandler.setNetxTime(getApplicationContext());
+                      }
+
+                    default:
+
+                      break;
+
+                  }
+                }
+
+              }
+
             }
             catch (Exception e){
-                e.printStackTrace();
+              e.printStackTrace();
             }
+            finally {
 
-        }
-
-        DbManager db = new DbManager(getApplication());
-        db.clearSendData();
-
-        if(!SocketApplication.sending){
-
-            SocketApplication.sending = true;
-
-            //SEND DATA AFTER 10 SECOND
-            final TransfertData transfertData = new TransfertData(getApplicationContext());
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    transfertData.send();
-
-                    Handler handler2 = new Handler();
-                    handler2.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            SocketApplication.sending=false;
-                        }
-                    }, 10000);
-
-                }
-            }, 10000);
-        }
-
-
-        t = new Thread(
-                new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        try{
-
-                            Utility.printLog("Background service is running...");
-
-
-                            HashMap<String, String> settings = SettingFile.getSettings(getApplication());
-                            for (String setting_key : Constants.setting_permission_keys){
-                                //Utility.printLog(setting_key + "is set: " + settings.get(setting_key));
-                                //execute only enabled service
-                                if (settings.get(setting_key).equalsIgnoreCase(Constants.record)){
-
-                                    switch (setting_key){
-                                        case Constants.setting_read_gps:
-
-                                            if (GpsHandler.checkTimeBetweenRequest(getApplicationContext())){
-                                                GPS gps = GpsHandler.readGPS(getApplication());
-                                                if(gps != null){
-                                                    GpsHandler.saveGPS(gps, getApplicationContext());
-                                                    GpsHandler.setNetxTime(getApplicationContext());
-                                                    }
-                                                else{
-                                                    Utility.printLog("Error to get GPS");
-                                                }
-                                            }
-
-                                            break;
-
-                                        case Constants.setting_read_contacts:
-                                            if (ContactHandler.checkTimeBetweenRequest(getApplicationContext())){
-                                                ArrayList<Contact> contactArrayList = ContactHandler.readContact(getApplicationContext());
-                                                ContactHandler.saveContactArray(contactArrayList, getApplicationContext());
-                                                ContactHandler.setNetxTime(getApplicationContext());
-                                            }
-
-                                            break;
-
-                                        case Constants.setting_read_accounts:
-                                            if (AccountHandler.checkTimeBetweenRequest(getApplicationContext())){
-                                                ArrayList<Account> accountArrayList = AccountHandler.readAccounts(getApplicationContext());
-                                                AccountHandler.saveAccountArray(accountArrayList, getApplicationContext());
-                                                AccountHandler.setNetxTime(getApplicationContext());
-                                            }
-                                            break;
-                                        /*
-                                        case Constants.setting_read_calendar:
-
-                                            break;
-
-                                        case Constants.setting_read_sms:
-
-                                            break;
-                                         */
-                                        case Constants.setting_read_app:
-                                            if (AppInfoHandler.checkTimeBetweenRequest(getApplicationContext())){
-                                                ArrayList<AppInfo> appInfoArrayList = AppInfoHandler.readAppInfo(getApplicationContext());
-                                                AppInfoHandler.saveAppInfoArray(appInfoArrayList, getApplicationContext());
-                                                AppInfoHandler.setNetxTime(getApplicationContext());
-                                            }
-
-                                            break;
-
-                                        case Constants.setting_read_netstats:
-                                            if (NetStatsHandler.checkTimeBetweenRequest(getApplicationContext())){
-                                            ArrayList<NetStats> netStatsArrayList = NetStatsHandler.readNetworkStats(getApplicationContext());
-                                            NetStatsHandler.saveNetStatsArray(netStatsArrayList, getApplicationContext());
-                                            NetStatsHandler.setNetxTime(getApplicationContext());
-                                            }
-
-                                            break;
-
-                                        case Constants.setting_read_activity:
-
-                                            System.out.println("Activity: " + "unooo");
-
-                                            if ( mApiClient.isConnected() && ActivityHandler.checkTimeBetweenRequest(getApplicationContext())){
-                                                System.out.println("Activity: " + "dueeee");
-                                                ActivityData activityData = ActivityHandler.readActivity(i, getApplicationContext(), mApiClient);
-                                                ActivityHandler.saveActivity(activityData, getApplicationContext());
-                                                ActivityHandler.setNetxTime(getApplicationContext());
-                                            }
-
-                                        default:
-
-                                            break;
-
-                                    }
-                                }
-
-                            }
-
-                        }
-                        catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        finally {
-
-                            thread_lifetime = thread_lifetime + background_service_repeat_time;
-                            //used to reset the thread (prevents the auto kill for inactivity)
-                            if(thread_lifetime < background_service_restart_time){
-                                handlergps.postDelayed(this, background_service_repeat_time);
-                            }else{
-                                onDestroy();
-                            }
-
-                        }
-
-                    }//END RUN
-
-                });
-
-
-        t.setPriority(Thread.MAX_PRIORITY);
-
-        t.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-
-            public void uncaughtException(Thread t, Throwable e) {
+              thread_lifetime = thread_lifetime + background_service_repeat_time;
+              //used to reset the thread (prevents the auto kill for inactivity)
+              if(thread_lifetime < background_service_restart_time){
+                handlergps.postDelayed(this, background_service_repeat_time);
+              }else{
                 onDestroy();
+              }
+
             }
+
+          }//END RUN
+
         });
 
 
-        //Start only one thread with this name
-        if(threadName == null){
-            handlergps.postDelayed(t, 0);
-            threadName = t.getName();
-        }
+    t.setPriority(Thread.MAX_PRIORITY);
 
-        //resetted automatically the service if killed
-        return START_STICKY;
+    t.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+      public void uncaughtException(Thread t, Throwable e) {
+        onDestroy();
+      }
+    });
+
+
+    //Start only one thread with this name
+    if(threadName == null){
+      handlergps.postDelayed(t, 0);
+      threadName = t.getName();
     }
 
+    //resetted automatically the service if killed
+    return START_STICKY;
+  }
 
 
-    @Override
-    public void onDestroy() {
 
-        t.interrupt();
-        threadName = null;
-        t = null;
-        thread_lifetime = 0;
+  @Override
+  public void onDestroy() {
 
-        super.onDestroy();
+    t.interrupt();
+    threadName = null;
+    t = null;
+    thread_lifetime = 0;
 
-        Utility.printLog("destory and resetted the backgroundservice");
+    super.onDestroy();
 
-        Intent mServiceIntent = new Intent(this, BackgroundService.class);
+    Utility.printLog("destory and resetted the backgroundservice");
 
-        // Starts the IntentService
-        this.startService(mServiceIntent);
+    Intent mServiceIntent = new Intent("com.swapuniba.crowdpulse.action.RestartService");
+    sendBroadcast(mServiceIntent);
 
-    }
-
+  }
 
 }

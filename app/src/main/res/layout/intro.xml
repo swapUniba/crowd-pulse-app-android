@@ -34,9 +34,9 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:src="@drawable/logo" />
+            android:src="@drawable/logo"/>
 
         <TextView
             android:layout_width="match_parent"
